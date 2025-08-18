@@ -1,8 +1,8 @@
 // src/cli/index.ts
-import { config, validateLiveConfig } from "../config.js";
-import { log, warn, err, debug, closeLogger } from "../tools/logger.js";
-import { getPairList } from "../db/pairs.js";
-import { cmdFetch } from "../action/fetch.js";
+import { config, validateLiveConfig } from "../config";
+import { log, warn, err, debug, closeLogger } from "../tools/logger";
+import { getPairList } from "../db/pairs";
+import { cmdFetch } from "../action/fetch";
 
 const printHelp = () => {
 	console.log(`

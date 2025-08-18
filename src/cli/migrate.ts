@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import Database from "better-sqlite3";
 import { fileURLToPath } from "url";
-import { config, nowSecs } from "../config.js";
+import { config, nowSecs } from "../config";
 
 type MigrationFile = {
 	id: string; // ex: "20250817_0001"

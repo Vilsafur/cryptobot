@@ -1,4 +1,4 @@
-import { FOUR_HOURS_SECS, nowSecs } from "../config.js";
+import { FOUR_HOURS_SECS, nowSecs } from "../config";
 import { debug } from "../tools/logger";
 import { getDB } from "./storage";
 

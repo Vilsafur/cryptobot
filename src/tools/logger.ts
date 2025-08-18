@@ -1,7 +1,7 @@
 // src/tools/logger.ts
 import fs from "fs";
 import path from "path";
-import { config } from "../config.js";
+import { config } from "../config";
 
 type Level = "INFO" | "WARN" | "ERR" | "DEBUG";
 

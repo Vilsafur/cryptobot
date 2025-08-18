@@ -1,8 +1,8 @@
 // src/cli/purge.ts
 import Database from "better-sqlite3";
-import { config, FOUR_HOURS_SECS, nowSecs } from "../config.js";
-import { log, warn, err, closeLogger } from "../tools/logger.js";
-import { getPairList } from "../db/pairs.js";
+import { config, FOUR_HOURS_SECS, nowSecs } from "../config";
+import { log, warn, err, closeLogger } from "../tools/logger";
+import { getPairList } from "../db/pairs";
 
 const assertCandlesTableExists = (db: Database.Database) => {
 	const row = db

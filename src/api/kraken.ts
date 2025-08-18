@@ -1,6 +1,6 @@
 // src/api/kraken.ts
 import axios from "axios";
-import { debug, warn } from "../tools/logger.js";
+import { debug, warn } from "../tools/logger";
 
 const BASE = "https://api.kraken.com";
 

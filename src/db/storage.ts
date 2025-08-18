@@ -11,7 +11,7 @@ const ensureTableExists = (d: Database.Database, table_name: string) => {
 		.get(table_name) as { name?: string } | undefined;
 	if (!row?.name) {
 		throw new Error(
-			`[storage] Table "candles" introuvable. Exécute d'abord les migrations (ex: npm run migrate).`,
+			`[storage] Table "${table_name}" introuvable. Exécute d'abord les migrations (ex: npm run migrate).`,
 		);
 	}
 };
