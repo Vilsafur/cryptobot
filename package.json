@@ -12,9 +12,11 @@
     "migrate": "tsx src/cli/migrate.ts up",
     "migrate:status": "tsx src/cli/migrate.ts status",
     "build": "tsc",
-    "start": "node dist/cli/index.js"
+    "start": "node dist/cli/index.js",
+    "plot": "tsx src/cli/plot.ts"
   },
   "dependencies": {
+    "asciichart": "^1.5.25",
     "axios": "^1.7.2",
     "better-sqlite3": "^9.4.0",
     "dotenv": "^16.4.5",
