@@ -67,7 +67,7 @@ export function openTrade(t: NewTrade): number {
 export function getTradeById(id: number): Trade | undefined {
 	const db = getDB();
 	const row = db
-		.prepare<unknown, Trade>(`SELECT * FROM trades WHERE id = ?`)
+		.prepare<unknown[], Trade>(`SELECT * FROM trades WHERE id = ?`)
 		.get(id);
 	return row ?? undefined;
 }
@@ -103,7 +103,7 @@ export function listTrades(params?: {
     LIMIT ${limit} OFFSET ${offset}
   `;
 
-	const rows = db.prepare<unknown, Trade[]>(sql).all(...args) as Trade[];
+	const rows = db.prepare<unknown[], Trade>(sql).all(...args) as Trade[];
 	return rows;
 }
 

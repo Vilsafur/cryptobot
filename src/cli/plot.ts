@@ -1,5 +1,5 @@
 // src/cli/plot.ts
-import asciichart from "asciichart";
+import { blue, cyan, green, plot, red } from "asciichart";
 import { nowSecs } from "../config";
 import { getCandles } from "../db/candles";
 import { closeLogger, err, log, warn } from "../tools/logger";
@@ -170,33 +170,30 @@ async function main() {
 	printIntro(args.pair, args.ma, args.ma2);
 
 	// --------- CHART PRIX (Close + MA(s)) ----------
-	const priceCfg: asciichart.PlotOptions = {
+	const priceCfg: asciichart.PlotConfig = {
 		height: args.height,
 		format: (x: number) => fmt(x),
-		colors: [asciichart.blue, asciichart.green, asciichart.red], // close, MA long, MA court
+		colors: [blue, green, red], // close, MA long, MA court
 	};
 
 	let priceChart = "";
 	if (maLongView.length > 0 && maShortView.length > 0) {
-		priceChart = asciichart.plot(
-			[closesView, maLongView, maShortView],
-			priceCfg,
-		);
+		priceChart = plot([closesView, maLongView, maShortView], priceCfg);
 	} else if (maLongView.length > 0) {
-		priceChart = asciichart.plot([closesView, maLongView], priceCfg);
+		priceChart = plot([closesView, maLongView], priceCfg);
 	} else if (maShortView.length > 0) {
-		priceChart = asciichart.plot([closesView, maShortView], priceCfg);
+		priceChart = plot([closesView, maShortView], priceCfg);
 	} else {
-		priceChart = asciichart.plot(closesView, priceCfg);
+		priceChart = plot(closesView, priceCfg);
 	}
 
 	// --------- CHART VOLUME ----------
-	const volCfg: asciichart.PlotOptions = {
+	const volCfg: asciichart.PlotConfig = {
 		height: args.volHeight,
 		format: (x: number) => fmt(x),
-		colors: [asciichart.cyan],
+		colors: [cyan],
 	};
-	const volChart = asciichart.plot(volsView, volCfg);
+	const volChart = plot(volsView, volCfg);
 
 	// --------- RENDU ----------
 	log("=== DB Candles Plot ===");
