@@ -1,8 +1,9 @@
 // src/cli/migrate.ts
-import fs from "fs";
-import path from "path";
+
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import Database from "better-sqlite3";
-import { fileURLToPath } from "url";
 import { config, nowSecs } from "../config";
 
 type MigrationFile = {

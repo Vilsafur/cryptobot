@@ -1,6 +1,6 @@
 // src/tools/logger.ts
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 import { config } from "../config";
 
 type Level = "INFO" | "WARN" | "ERR" | "DEBUG";
@@ -66,7 +66,7 @@ const formatLine = (level: Level, args: unknown[]): string => {
 };
 
 const write = (level: Level, ...args: unknown[]) => {
-	const line = formatLine(level, args) + "\n";
+	const line = `${formatLine(level, args)}\n`;
 
 	if (config.logs.mode === "console") {
 		switch (level) {

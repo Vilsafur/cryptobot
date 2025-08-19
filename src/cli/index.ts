@@ -1,8 +1,10 @@
 // src/cli/index.ts
-import { config, validateLiveConfig } from "../config";
-import { log, warn, err, debug, closeLogger } from "../tools/logger";
-import { getPairList } from "../db/pairs";
+
 import { cmdFetch } from "../action/fetch";
+import { cmdSimulate } from "../action/simulate";
+import { config, validateLiveConfig } from "../config";
+import { getPairList } from "../db/pairs";
+import { closeLogger, debug, err, log, warn } from "../tools/logger";
 
 const printHelp = () => {
 	console.log(`
@@ -71,9 +73,7 @@ const main = async () => {
 	// Placeholder de commandes (pour plus tard)
 	switch (cmd) {
 		case "simulate":
-			log(
-				"[simulate] (placeholder) La simulation sera implémentée ultérieurement.",
-			);
+			await cmdSimulate();
 			break;
 		case "live":
 			log("[live] (placeholder) Le mode live sera implémenté ultérieurement.");

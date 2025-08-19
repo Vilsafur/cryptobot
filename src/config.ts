@@ -8,12 +8,6 @@ const parseBool = (v: string | undefined, def = false) => {
 	return s === "1" || s === "true" || s === "yes" || s === "y";
 };
 
-const parseList = (v: string | undefined, def: string[] = []) =>
-	(v ?? "")
-		.split(",")
-		.map((s) => s.trim())
-		.filter(Boolean) || def;
-
 /** Schéma et defaults */
 const EnvSchema = z.object({
 	KRAKEN_API_KEY: z.string().optional(),
