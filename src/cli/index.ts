@@ -63,6 +63,7 @@ const main = async () => {
   // Validation minimale si live sans dry-run
   try {
     validateLiveConfig();
+    // biome-ignore lint/suspicious/noExplicitAny: Erreur d'un catch générique pour log
   } catch (e: any) {
     warn(
       "Configuration live incomplète (ok si DRY_RUN=true). Détail:",

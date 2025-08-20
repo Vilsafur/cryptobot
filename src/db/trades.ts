@@ -81,6 +81,7 @@ export function listTrades(params?: {
 }): Trade[] {
   const db = getDB();
   const where: string[] = [];
+  // biome-ignore lint/suspicious/noExplicitAny: Non-typed params pour flexibilité
   const args: any[] = [];
 
   if (params?.pair) {

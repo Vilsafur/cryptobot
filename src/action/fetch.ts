@@ -36,6 +36,7 @@ const fetchOnceForAllPairs = async () => {
           `[fetch] ${pair}: aucune nouvelle bougie (last=${last ?? "none"})`,
         );
       }
+      // biome-ignore lint/suspicious/noExplicitAny: Erreur d'un catch générique pour log
     } catch (e: any) {
       warn(`[fetch] ${pair}: échec`, e?.message ?? e);
     }

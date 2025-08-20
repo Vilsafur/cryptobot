@@ -79,6 +79,7 @@ const main = async () => {
       log(
         `[purge] ${pair}: deleted=${removed} | windows: (0→${fullCut}) keep all, (${fullCut}→${halfCut}) keep 1/2, (${halfCut}→${sixthCut}) keep 1/6, (<${sixthCut}) purge`,
       );
+      // biome-ignore lint/suspicious/noExplicitAny: Erreur d'un catch générique pour log
     } catch (e: any) {
       warn(`[purge] ${pair}: échec`, e?.message ?? e);
     }

@@ -56,6 +56,7 @@ let pairsCache: {
 
 async function publicGet<T>(
   path: string,
+  // biome-ignore lint/suspicious/noExplicitAny: Non-typed params pour flexibilité
   params?: Record<string, any>,
 ): Promise<T> {
   const url = `${BASE}${path}`;
@@ -169,8 +170,10 @@ export async function getOHLC(
   const key =
     Object.keys(result).find((k) => k === internalKey) ??
     Object.keys(result)[0];
+  // biome-ignore lint/suspicious/noExplicitAny: Non-typed rows pour flexibilité
   const rows = (result as any)[key] ?? [];
 
+  // biome-ignore lint/suspicious/noExplicitAny: Non-typed rows pour flexibilité
   const candles: Candle[] = rows.map((r: any[]) => ({
     time: r[0], // epoch (s)
     open: Number(r[1]),
@@ -203,6 +206,7 @@ export async function getTicker(prettyPair: string): Promise<Ticker> {
   });
   const key =
     Object.keys(res).find((k) => k === internalKey) ?? Object.keys(res)[0];
+  // biome-ignore lint/suspicious/noExplicitAny: Non-typed rows pour flexibilité
   const t = (res as any)[key];
 
   if (!t?.c) {

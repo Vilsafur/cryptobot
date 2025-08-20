@@ -82,6 +82,7 @@ export const getCandles = (
   limit = 500,
 ): DBCandle[] => {
   const db = getDB();
+  // biome-ignore lint/suspicious/noExplicitAny: Non-typed params pour flexibilité
   const params: any[] = [pair];
 
   // WHERE commun
@@ -117,6 +118,7 @@ export const countCandles = (
   until?: number,
 ): number => {
   let sql = `SELECT COUNT(*) as n FROM candles WHERE pair = ?`;
+  // biome-ignore lint/suspicious/noExplicitAny: Non-typed params pour flexibilité
   const params: any[] = [pair];
   if (since != null) {
     sql += ` AND time >= ?`;
