@@ -1,7 +1,13 @@
 // tests/helpers/test-db.ts
-import { beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
-import { closeDB, DB, getDB, loadFixtures, migrate } from '../../src/db/storage';
-import './test-config';
+import { afterAll, afterEach, beforeAll, beforeEach } from "vitest";
+import {
+  closeDB,
+  type DB,
+  getDB,
+  loadFixtures,
+  migrate,
+} from "../../src/db/storage";
+import "./test-config";
 
 let db: DB;
 
@@ -14,13 +20,13 @@ export function useTestDb() {
 
   // Snapshot après migrations + fixtures
   beforeEach(() => {
-    db.exec('SAVEPOINT test_case');
+    db.exec("SAVEPOINT test_case");
   });
 
   afterEach(() => {
     // Retour à l’état fixtures/migrations, quel que soit le test
-    db.exec('ROLLBACK TO test_case');
-    db.exec('RELEASE test_case');
+    db.exec("ROLLBACK TO test_case");
+    db.exec("RELEASE test_case");
   });
 
   afterAll(() => {

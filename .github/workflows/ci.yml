@@ -34,7 +34,7 @@ jobs:
         run: npm ci
 
       - name: Run Biome (lint)
-        run: npm run lint
+        run: npm run lint:github
 
   test:
     name: Vitest
