@@ -1,5 +1,5 @@
 import { FOUR_HOURS_SECS, nowSecs } from "../config";
-import { debug } from "../tools/logger";
+import { debug, warn } from "../tools/logger";
 import { getDB } from "./storage";
 
 export type DBCandle = {
@@ -141,25 +141,20 @@ export const hasMinWeeklyHistory = (pair: string): boolean => {
 	const needed = 42;
 	const rows = getCandles(pair, undefined, needed);
 	if (rows.length < needed) {
-		throw new Error(
-			`[storage] hasMinWeeklyHistory: not enough candles for ${pair}, found ${rows.length}, needed ${needed}`,
-		);
+		warn(`[storage] hasMinWeeklyHistory: not enough candles for ${pair}, found ${rows.length} < ${needed}`);
 		return false;
 	}
 
 	for (let i = 1; i < rows.length; i++) {
 		if (rows[i].time - rows[i - 1].time !== FOUR_HOURS_SECS) {
-			throw new Error(
-				`[storage] hasMinWeeklyHistory: candles not contiguous for ${pair}`,
-			);
+			warn(`[storage] hasMinWeeklyHistory: candles not contiguous for ${pair}, gap at index ${i}`);
 			return false;
 		}
 	}
 	const last = rows[rows.length - 1].time;
 	if (!(nowSecs() - last <= 2 * FOUR_HOURS_SECS)) {
-		throw new Error(
-			`[storage] hasMinWeeklyHistory: last candle too old for ${pair}, ${nowSecs()} - ${last} > ${2 * FOUR_HOURS_SECS} secs`,
-		);
+		warn(`[storage] hasMinWeeklyHistory: last candle too old for ${pair}, ${nowSecs()} - ${last} > ${2 * FOUR_HOURS_SECS} secs`)
+		return false;
 	}
 	return nowSecs() - last <= 2 * FOUR_HOURS_SECS; // ≤ 8h
 };
