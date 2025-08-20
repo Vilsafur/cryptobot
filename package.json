@@ -3,16 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx src/cli/index.ts",
-    "simulate": "tsx src/cli/index.ts simulate",
-    "live": "tsx src/cli/index.ts live",
-    "fetch": "tsx src/cli/index.ts fetch",
-    "purge": "tsx src/cli/purge.ts",
-    "migrate": "tsx src/cli/migrate.ts up",
-    "migrate:status": "tsx src/cli/migrate.ts status",
     "build": "tsc",
+    "dev": "tsx src/cli/index.ts",
+    "fetch": "tsx src/cli/index.ts fetch",
+    "lint:github": "biome check . --reporter=github",
+    "lint": "biome check .",
+    "live": "tsx src/cli/index.ts live",
+    "migrate:status": "tsx src/cli/migrate.ts status",
+    "migrate": "tsx src/cli/migrate.ts up",
+    "plot": "tsx src/cli/plot.ts",
+    "purge": "tsx src/cli/purge.ts",
+    "rewrite:candles": "tsx tests/helpers/rewrite-candles.ts",
+    "simulate": "tsx src/cli/index.ts simulate",
     "start": "node dist/cli/index.js",
-    "plot": "tsx src/cli/plot.ts"
+    "test:watch": "vitest --coverage --watch",
+    "test": "vitest --run --coverage"
   },
   "dependencies": {
     "asciichart": "^1.5.25",
@@ -27,8 +32,10 @@
     "@types/asciichart": "^1.5.8",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.12.12",
+    "@vitest/coverage-v8": "^3.2.4",
     "tsx": "^4.16.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
   },
   "keywords": [],
   "author": "",
