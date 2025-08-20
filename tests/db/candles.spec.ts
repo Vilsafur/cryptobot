@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { useTestDb } from '../helpers/test-db';
-import { countCandles, getCandles, getLastCandleTime, hasMinWeeklyHistory, upsertCandle, upsertCandles } from '../../src/db/candles';
+import { describe, expect, it } from 'vitest';
 import { FOUR_HOURS_SECS } from '../../src/config';
+import { countCandles, getCandles, getLastCandleTime, hasMinWeeklyHistory, upsertCandle, upsertCandles } from '../../src/db/candles';
+import { useTestDb } from '../helpers/test-db';
 
 useTestDb();
 
