@@ -12,7 +12,9 @@
     "migrate:status": "tsx src/cli/migrate.ts status",
     "build": "tsc",
     "start": "node dist/cli/index.js",
-    "plot": "tsx src/cli/plot.ts"
+    "plot": "tsx src/cli/plot.ts",
+    "test": "vitest --run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "asciichart": "^1.5.25",
@@ -28,7 +30,8 @@
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20.12.12",
     "tsx": "^4.16.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^3.2.4"
   },
   "keywords": [],
   "author": "",
