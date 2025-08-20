@@ -1,13 +1,12 @@
 // tests/helpers/test-db.ts
 import { beforeAll, beforeEach, afterEach, afterAll } from 'vitest';
-import { closeDB, DB, getDB, loadFixtures, migrate } from '../../src/db/storage.js';
-import { config } from '../../src/config.js';
+import { closeDB, DB, getDB, loadFixtures, migrate } from '../../src/db/storage';
+import './test-config';
 
 let db: DB;
 
 export function useTestDb() {
   beforeAll(async () => {
-    config.dbPath = ':memory:'; // Utilisation d'une base en mémoire pour les tests
     db = getDB(false); // Utilisation d'une base en mémoire pour les tests
     await migrate();
     await loadFixtures();

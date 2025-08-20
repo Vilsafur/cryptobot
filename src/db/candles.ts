@@ -75,25 +75,39 @@ export const upsertCandles = (pair: string, candles: DBCandle[]): number => {
 	return inserted;
 };
 
-/** Récupère des bougies (ASC). since en secondes epoch. */
+/** Récupère les DERNIÈRES bougies (affichées en ASC). since en secondes epoch. */
 export const getCandles = (
-	pair: string,
-	since?: number,
-	limit = 500,
+  pair: string,
+  since?: number,
+  limit = 500,
 ): DBCandle[] => {
-	let sql = `SELECT time, open, high, low, close, volume FROM candles WHERE pair = ?`;
-	const params: any[] = [pair];
-	if (since != null) {
-		sql += ` AND time >= ?`;
-		params.push(since);
-	}
-	sql += ` ORDER BY time ASC LIMIT ?`;
-	params.push(limit);
+  const db = getDB();
+  const params: any[] = [pair];
 
-	const rows = getDB()
-		.prepare(sql)
-		.all(...params) as DBCandle[];
-	return rows;
+  // WHERE commun
+  let where = `pair = ?`;
+  if (since != null) {
+    where += ` AND time >= ?`;
+    params.push(since);
+  }
+
+  // On prend les N dernières en DESC, puis on réordonne en ASC pour l'appelant
+  const inner = `
+    SELECT time, open, high, low, close, volume
+    FROM candles
+    WHERE ${where}
+    ORDER BY time DESC
+    LIMIT ?
+  `;
+  params.push(limit);
+
+  const sql = `
+    SELECT *
+    FROM (${inner}) AS t
+    ORDER BY time ASC
+  `;
+
+  return db.prepare(sql).all(...params) as DBCandle[];
 };
 
 /** Compte le nombre de bougies pour une paire (option: bornes). */
@@ -126,13 +140,26 @@ export const countCandles = (
 export const hasMinWeeklyHistory = (pair: string): boolean => {
 	const needed = 42;
 	const rows = getCandles(pair, undefined, needed);
-	if (rows.length < needed) return false;
+	if (rows.length < needed) {
+		throw new Error(
+			`[storage] hasMinWeeklyHistory: not enough candles for ${pair}, found ${rows.length}, needed ${needed}`,
+		);
+		return false;
+	}
 
 	for (let i = 1; i < rows.length; i++) {
 		if (rows[i].time - rows[i - 1].time !== FOUR_HOURS_SECS) {
+			throw new Error(
+				`[storage] hasMinWeeklyHistory: candles not contiguous for ${pair}`,
+			);
 			return false;
 		}
 	}
 	const last = rows[rows.length - 1].time;
+	if (!(nowSecs() - last <= 2 * FOUR_HOURS_SECS)) {
+		throw new Error(
+			`[storage] hasMinWeeklyHistory: last candle too old for ${pair}, ${nowSecs()} - ${last} > ${2 * FOUR_HOURS_SECS} secs`,
+		);
+	}
 	return nowSecs() - last <= 2 * FOUR_HOURS_SECS; // ≤ 8h
 };

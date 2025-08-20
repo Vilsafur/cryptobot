@@ -14,7 +14,8 @@
     "start": "node dist/cli/index.js",
     "plot": "tsx src/cli/plot.ts",
     "test": "vitest --run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "rewrite:candles": "tsx tests/helpers/rewrite-candles.ts"
   },
   "dependencies": {
     "asciichart": "^1.5.25",
