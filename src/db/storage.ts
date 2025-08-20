@@ -47,8 +47,22 @@ export const closeDB = () => {
 	}
 };
 
+const ensureSchemaMigrations = () => {
+	const db = getDB(false);
+	db.exec(`
+		CREATE TABLE IF NOT EXISTS schema_migrations (
+			id TEXT PRIMARY KEY,
+			name TEXT NOT NULL,
+			applied_at INTEGER NOT NULL
+		);
+	`);
+};
+
 export async function runSqlFiles(dir: string, insertInMigrationsTable = false) {
 	const db = getDB();
+	if (insertInMigrationsTable) {
+		ensureSchemaMigrations();
+	}
   const files = (await readdir(dir))
     .filter(f => f.endsWith('.sql'))
     // Assure l'ordre des migrations : 001_, 002_, ...

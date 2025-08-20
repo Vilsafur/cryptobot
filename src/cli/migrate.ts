@@ -45,17 +45,6 @@ const readSqlMigrations = (dir: string): MigrationFile[] => {
 	});
 };
 
-const ensureSchemaMigrations = () => {
-	const db = getDB(false);
-	db.exec(`
-    CREATE TABLE IF NOT EXISTS schema_migrations (
-      id TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      applied_at INTEGER NOT NULL
-    );
-  `);
-};
-
 const getAppliedMigrations = (): Set<string> => {
 	const db = getDB(false);
 	const rows = db
@@ -101,9 +90,6 @@ const cmdStatus = (migrations: MigrationFile[]) => {
 
 const main = () => {
 	const cmd = process.argv[2] ?? "up";
-
-	// Ouvre (ou crée) la DB. better-sqlite3 crée le fichier si inexistant.
-	ensureSchemaMigrations();
 
 	const migrationsDir = getMigrationsDir();
 	const migrations = readSqlMigrations(migrationsDir);
