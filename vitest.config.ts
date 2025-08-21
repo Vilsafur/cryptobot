@@ -11,6 +11,7 @@ export default defineConfig({
         "tests/",
         "src/migration/**",
         "src/fixtures/**",
+        "vitest.config.ts"
       ],
     },
   },
