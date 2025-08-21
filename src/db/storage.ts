@@ -47,7 +47,7 @@ export const closeDB = () => {
   }
 };
 
-const ensureSchemaMigrations = () => {
+export const ensureSchemaMigrations = () => {
   const db = getDB(false);
   db.exec(`
     CREATE TABLE IF NOT EXISTS schema_migrations (

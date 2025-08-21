@@ -1,0 +1,13 @@
+INSERT INTO trades VALUES (1,
+    'ETH/EUR',
+    'BUY',
+    entry_price REAL NOT NULL,
+    exit_price REAL,
+    amount REAL NOT NULL,
+    invested REAL NOT NULL,
+    stop_loss REAL,
+    take_profit REAL,
+    status TEXT CHECK(status IN ('OPEN', 'CLOSED')) NOT NULL DEFAULT 'OPEN',
+    opened_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    closed_at DATETIME,
+    pnl REAL);
