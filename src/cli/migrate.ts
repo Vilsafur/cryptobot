@@ -2,7 +2,7 @@
 
 import fs from "node:fs";
 import { basename, join } from "node:path";
-import { getDB, migrate } from "../db/storage";
+import { ensureSchemaMigrations, getDB, migrate } from "../db/storage";
 
 type MigrationFile = {
   id: string; // ex: "20250817_0001"
@@ -54,6 +54,7 @@ const getAppliedMigrations = (): Set<string> => {
 };
 
 export const cmdUp = (migrations: MigrationFile[]) => {
+  ensureSchemaMigrations();
   const applied = getAppliedMigrations();
   const pending = migrations.filter((m) => !applied.has(m.id));
 
