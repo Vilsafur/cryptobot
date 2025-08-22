@@ -1,7 +1,7 @@
 // scripts/rewrite-trades.ts
 import { readFile, writeFile } from "node:fs/promises";
 
-const STEP = 4 * 60 * 60;               // 4h en secondes
+const STEP = 4 * 60 * 60; // 4h en secondes
 const tradesSqlPath = "./src/fixtures/trades.sql";
 
 // Aligne "now" sur un multiple de STEP (utile pour coller aux bougies 4h)
@@ -75,19 +75,21 @@ async function main() {
       continue;
     }
 
-    values[10]  = `'${tsToISO(openedTs)}'`; // opened_at (10e champ)
+    values[10] = `'${tsToISO(openedTs)}'`; // opened_at (10e champ)
     values[11] = `'${tsToISO(closedTs)}'`; // closed_at (11e champ)
 
     const newLine = line.replace(
       /VALUES\s*\((.*)\)\s*;?$/i,
-      `VALUES (${joinValues(values)});`
+      `VALUES (${joinValues(values)});`,
     );
 
     outLines.push(newLine);
   }
 
   await writeFile(tradesSqlPath, `${outLines.join("\n")}\n`, "utf8");
-  console.log(`✅ ${tradesSqlPath} généré (${N} trades traités) à partir de ${tradesSqlPath}.`);
+  console.log(
+    `✅ ${tradesSqlPath} généré (${N} trades traités) à partir de ${tradesSqlPath}.`,
+  );
 }
 
 main().catch((err) => {

@@ -1,21 +1,21 @@
 // tests/tools/logger.spec.ts
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import fs from "node:fs";
+import path from "node:path";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // helper: charge le module logger avec une config mockée, en ESM (réinitialisation entre tests)
+// biome-ignore lint/suspicious/noExplicitAny: No
 async function loadLoggerWithConfig(cfg: any) {
   vi.resetModules();
   vi.useFakeTimers();
-  vi.setSystemTime(new Date('2024-01-02T03:04:05.000Z')); // timestamp stable pour snapshots
+  vi.setSystemTime(new Date("2024-01-02T03:04:05.000Z")); // timestamp stable pour snapshots
 
-  vi.doMock('../../src/config', () => {
+  vi.doMock("../../src/config", () => {
     return { config: cfg };
   });
 
   // IMPORTANT: importer après le mock
-  const logger = await import('../../src/tools/logger.ts');
+  const logger = await import("../../src/tools/logger.ts");
   return logger as unknown as {
     log: (...args: unknown[]) => void;
     warn: (...args: unknown[]) => void;
@@ -28,9 +28,10 @@ async function loadLoggerWithConfig(cfg: any) {
 const waitFs = (ms = 15) => new Promise((r) => setTimeout(r, ms));
 
 // regex simple pour valider le format (ISO + [LEVEL] + message)
-const lineRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z \[(INFO|WARN|ERR|DEBUG)\] .+$/;
+const lineRegex =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z \[(INFO|WARN|ERR|DEBUG)\] .+$/;
 
-describe('logger (mode console)', () => {
+describe("logger (mode console)", () => {
   let restoreConsole: Array<() => void> = [];
 
   beforeEach(() => {
@@ -42,21 +43,21 @@ describe('logger (mode console)', () => {
     vi.useRealTimers();
   });
 
-  it('écrit sur console.log / warn / error ; ignore debug si debug=false', async () => {
+  it("écrit sur console.log / warn / error ; ignore debug si debug=false", async () => {
     const cfg = {
       logs: {
-        mode: 'console',
+        mode: "console",
         debug: false,
-        dir: 'ignored',
-        infoName: 'app.log',
-        errorName: 'error.log',
+        dir: "ignored",
+        infoName: "app.log",
+        errorName: "error.log",
       },
     };
 
-    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    const debugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    const logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
     restoreConsole.push(() => logSpy.mockRestore());
     restoreConsole.push(() => warnSpy.mockRestore());
     restoreConsole.push(() => errSpy.mockRestore());
@@ -65,57 +66,57 @@ describe('logger (mode console)', () => {
     const logger = await loadLoggerWithConfig(cfg);
     vi.useRealTimers();
 
-    logger.log('hello', { a: 1 });
-    logger.warn('attention');
-    logger.err('oups');
-    logger.debug('hidden');
+    logger.log("hello", { a: 1 });
+    logger.warn("attention");
+    logger.err("oups");
+    logger.debug("hidden");
 
     expect(logSpy).toHaveBeenCalledTimes(1);
     expect(warnSpy).toHaveBeenCalledTimes(1);
     expect(errSpy).toHaveBeenCalledTimes(1);
     expect(debugSpy).not.toHaveBeenCalled();
 
-    const lineInfo = (logSpy.mock.calls[0]?.[0] as string) ?? '';
+    const lineInfo = (logSpy.mock.calls[0]?.[0] as string) ?? "";
     expect(lineInfo).toMatch(lineRegex);
-    expect(lineInfo).toContain('[INFO]');
-    expect(lineInfo).toContain('hello');
+    expect(lineInfo).toContain("[INFO]");
+    expect(lineInfo).toContain("hello");
     expect(lineInfo).toContain('"a":1');
 
-    const lineWarn = (warnSpy.mock.calls[0]?.[0] as string) ?? '';
+    const lineWarn = (warnSpy.mock.calls[0]?.[0] as string) ?? "";
     expect(lineWarn).toMatch(lineRegex);
-    expect(lineWarn).toContain('[WARN]');
+    expect(lineWarn).toContain("[WARN]");
 
-    const lineErr = (errSpy.mock.calls[0]?.[0] as string) ?? '';
+    const lineErr = (errSpy.mock.calls[0]?.[0] as string) ?? "";
     expect(lineErr).toMatch(lineRegex);
-    expect(lineErr).toContain('[ERR]');
+    expect(lineErr).toContain("[ERR]");
   });
 
-  it('écrit aussi sur console.debug si debug=true', async () => {
+  it("écrit aussi sur console.debug si debug=true", async () => {
     const cfg = {
       logs: {
-        mode: 'console',
+        mode: "console",
         debug: true,
-        dir: 'ignored',
-        infoName: 'app.log',
-        errorName: 'error.log',
+        dir: "ignored",
+        infoName: "app.log",
+        errorName: "error.log",
       },
     };
 
-    const debugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {});
+    const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
     const logger = await loadLoggerWithConfig(cfg);
     vi.useRealTimers();
 
-    logger.debug('visible');
+    logger.debug("visible");
     expect(debugSpy).toHaveBeenCalledTimes(1);
 
-    const line = (debugSpy.mock.calls[0]?.[0] as string) ?? '';
+    const line = (debugSpy.mock.calls[0]?.[0] as string) ?? "";
     expect(line).toMatch(lineRegex);
-    expect(line).toContain('[DEBUG]');
+    expect(line).toContain("[DEBUG]");
     debugSpy.mockRestore();
   });
 });
 
-describe('logger (mode files)', () => {
+describe("logger (mode files)", () => {
   let tmpDir: string;
 
   beforeEach(() => {
@@ -130,24 +131,24 @@ describe('logger (mode files)', () => {
     vi.useRealTimers();
   });
 
-  it('crée le dossier si absent, écrit dans info.log & error.log, gère DEBUG selon debug=true', async () => {
+  it("crée le dossier si absent, écrit dans info.log & error.log, gère DEBUG selon debug=true", async () => {
     const cfg = {
       logs: {
-        mode: 'files',
+        mode: "files",
         debug: true, // pour que DEBUG aille aussi dans info.log
-        dir: path.join(tmpDir, 'logs'),
-        infoName: 'app.log',
-        errorName: 'error.log',
+        dir: path.join(tmpDir, "logs"),
+        infoName: "app.log",
+        errorName: "error.log",
       },
     };
 
     const logger = await loadLoggerWithConfig(cfg);
     vi.useRealTimers();
 
-    logger.log('info-line');
-    logger.warn('warn-line');
-    logger.debug('debug-line');
-    logger.err('err-line');
+    logger.log("info-line");
+    logger.warn("warn-line");
+    logger.debug("debug-line");
+    logger.err("err-line");
 
     // Le dossier n’existe PAS encore -> ensureFileStreams doit le créer
     expect(fs.existsSync(cfg.logs.dir)).toBe(true);
@@ -164,85 +165,85 @@ describe('logger (mode files)', () => {
     expect(fs.existsSync(infoPath)).toBe(true);
     expect(fs.existsSync(errPath)).toBe(true);
 
-    const infoContent = fs.readFileSync(infoPath, 'utf8').trim().split('\n');
-    const errContent = fs.readFileSync(errPath, 'utf8').trim().split('\n');
+    const infoContent = fs.readFileSync(infoPath, "utf8").trim().split("\n");
+    const errContent = fs.readFileSync(errPath, "utf8").trim().split("\n");
 
     // INFO/WARN/DEBUG -> info.log
     expect(infoContent.length).toBe(3);
     expect(infoContent[0]).toMatch(lineRegex);
-    expect(infoContent[0]).toContain('[INFO]');
-    expect(infoContent[0]).toContain('info-line');
+    expect(infoContent[0]).toContain("[INFO]");
+    expect(infoContent[0]).toContain("info-line");
 
     expect(infoContent[1]).toMatch(lineRegex);
-    expect(infoContent[1]).toContain('[WARN]');
-    expect(infoContent[1]).toContain('warn-line');
+    expect(infoContent[1]).toContain("[WARN]");
+    expect(infoContent[1]).toContain("warn-line");
 
     expect(infoContent[2]).toMatch(lineRegex);
-    expect(infoContent[2]).toContain('[DEBUG]');
-    expect(infoContent[2]).toContain('debug-line');
+    expect(infoContent[2]).toContain("[DEBUG]");
+    expect(infoContent[2]).toContain("debug-line");
 
     // ERR -> error.log
     expect(errContent.length).toBe(1);
     expect(errContent[0]).toMatch(lineRegex);
-    expect(errContent[0]).toContain('[ERR]');
-    expect(errContent[0]).toContain('err-line');
+    expect(errContent[0]).toContain("[ERR]");
+    expect(errContent[0]).toContain("err-line");
   });
 
-  it('ne log pas DEBUG en files si debug=false', async () => {
+  it("ne log pas DEBUG en files si debug=false", async () => {
     const cfg = {
       logs: {
-        mode: 'files',
+        mode: "files",
         debug: false,
-        dir: path.join(tmpDir, 'logs2'),
-        infoName: 'app.log',
-        errorName: 'error.log',
+        dir: path.join(tmpDir, "logs2"),
+        infoName: "app.log",
+        errorName: "error.log",
       },
     };
 
     const logger = await loadLoggerWithConfig(cfg);
     vi.useRealTimers();
-    logger.debug('should-not-appear');
-    logger.log('ok');
+    logger.debug("should-not-appear");
+    logger.log("ok");
     logger.closeLogger();
     await waitFs();
 
     const infoPath = path.join(cfg.logs.dir, cfg.logs.infoName);
     expect(fs.existsSync(infoPath)).toBe(true);
-    const infoContent = fs.readFileSync(infoPath, 'utf8').trim().split('\n');
+    const infoContent = fs.readFileSync(infoPath, "utf8").trim().split("\n");
 
-    expect(infoContent.some((l) => l.includes('[DEBUG]'))).toBe(false);
-    expect(infoContent.some((l) => l.includes('[INFO]'))).toBe(true);
+    expect(infoContent.some((l) => l.includes("[DEBUG]"))).toBe(false);
+    expect(infoContent.some((l) => l.includes("[INFO]"))).toBe(true);
   });
 
-  it('ré-ouvre les streams après closeLogger() si on relog derrière', async () => {
+  it("ré-ouvre les streams après closeLogger() si on relog derrière", async () => {
     const cfg = {
       logs: {
-        mode: 'files',
+        mode: "files",
         debug: false,
-        dir: path.join(tmpDir, 'logs3'),
-        infoName: 'app.log',
-        errorName: 'error.log',
+        dir: path.join(tmpDir, "logs3"),
+        infoName: "app.log",
+        errorName: "error.log",
       },
     };
 
     const logger = await loadLoggerWithConfig(cfg);
     vi.useRealTimers();
 
-    logger.log('first');
+    logger.log("first");
     logger.closeLogger();
     await waitFs();
 
     // re-log => ensureFileStreams doit recréer les streams
-    logger.log('second');
+    logger.log("second");
     logger.closeLogger();
     await waitFs();
 
     const infoPath = path.join(cfg.logs.dir, cfg.logs.infoName);
     expect(fs.existsSync(infoPath)).toBe(true);
-    const infoContent = fs.readFileSync(infoPath, 'utf8').trim().split('\n');
+    const infoContent = fs.readFileSync(infoPath, "utf8").trim().split("\n");
 
     expect(infoContent.length).toBe(2);
-    expect(infoContent[0]).toContain('first');
-    expect(infoContent[1]).toContain('second');
+    expect(infoContent[0]).toContain("first");
+    expect(infoContent[1]).toContain("second");
   });
 });
