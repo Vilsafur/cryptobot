@@ -75,8 +75,8 @@ async function main() {
       continue;
     }
 
-    values[9]  = `'${tsToISO(openedTs)}'`; // opened_at (10e champ)
-    values[10] = `'${tsToISO(closedTs)}'`; // closed_at (11e champ)
+    values[10]  = `'${tsToISO(openedTs)}'`; // opened_at (10e champ)
+    values[11] = `'${tsToISO(closedTs)}'`; // closed_at (11e champ)
 
     const newLine = line.replace(
       /VALUES\s*\((.*)\)\s*;?$/i,
@@ -86,7 +86,7 @@ async function main() {
     outLines.push(newLine);
   }
 
-  await writeFile(tradesSqlPath, outLines.join("\n") + "\n", "utf8");
+  await writeFile(tradesSqlPath, `${outLines.join("\n")}\n`, "utf8");
   console.log(`✅ ${tradesSqlPath} généré (${N} trades traités) à partir de ${tradesSqlPath}.`);
 }
 
