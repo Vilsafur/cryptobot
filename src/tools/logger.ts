@@ -50,15 +50,6 @@ const safeStringify = (v: unknown): string => {
 };
 
 const formatLine = (level: Level, args: unknown[]): string => {
-  if (config.logs.json) {
-    return JSON.stringify({
-      time: ts(),
-      level,
-      message: args
-        .map((a) => (typeof a === "string" ? a : safeStringify(a)))
-        .join(" "),
-    });
-  }
   const msg = args
     .map((a) => (typeof a === "string" ? a : safeStringify(a)))
     .join(" ");
